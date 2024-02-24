@@ -1,0 +1,7 @@
+C:\Users\Giorgi\source\repos\StepProjects\StepProjects\obj\Debug\StepProjects.csproj.AssemblyReference.cache
+C:\Users\Giorgi\source\repos\StepProjects\StepProjects\obj\Debug\StepProjects.csproj.CoreCompileInputs.cache
+C:\Users\Giorgi\source\repos\StepProjects\StepProjects\bin\Debug\StepProjects.exe.config
+C:\Users\Giorgi\source\repos\StepProjects\StepProjects\bin\Debug\StepProjects.exe
+C:\Users\Giorgi\source\repos\StepProjects\StepProjects\bin\Debug\StepProjects.pdb
+C:\Users\Giorgi\source\repos\StepProjects\StepProjects\obj\Debug\StepProjects.exe
+C:\Users\Giorgi\source\repos\StepProjects\StepProjects\obj\Debug\StepProjects.pdb

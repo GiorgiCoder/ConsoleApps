@@ -1,0 +1,6 @@
+Georgian,English
+furceli,paper
+kalami,pen
+magida,table
+nabiji,step
+botli,bottle
