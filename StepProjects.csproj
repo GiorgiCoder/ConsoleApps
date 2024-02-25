@@ -44,7 +44,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ATM.cs" />
+    <Compile Include="BookManager\Book.cs" />
+    <Compile Include="BookManager\BookManager.cs" />
+    <Compile Include="BookManager\UserInterface.cs" />
     <Compile Include="Calculator.cs" />
+    <Compile Include="StudentManager\Student.cs" />
+    <Compile Include="StudentManager\StudentManager.cs" />
     <Compile Include="Translator.cs" />
     <Compile Include="GuessTheNumber.cs" />
     <Compile Include="Hangman.cs" />

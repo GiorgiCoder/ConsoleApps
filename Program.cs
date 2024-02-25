@@ -1,4 +1,6 @@
-﻿using System;
+﻿using StepProjects.BookManager;
+using StepProjects.StudentManager;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -23,6 +25,11 @@ namespace StepProjects
             //ATM atm = new ATM();
             //atm.Action();
 
+            //UserInterface ui = new UserInterface();
+            //ui.Action();
+
+            //StudentManagerClass sm = new StudentManagerClass();
+            //sm.Action();
         }
     }
 }
