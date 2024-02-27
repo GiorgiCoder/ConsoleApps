@@ -1,6 +1,10 @@
 Georgian,English
-furceli,paper
-kalami,pen
-magida,table
-nabiji,step
-botli,bottle
+furceli,Paper
+kalami,Pen
+magida,Table
+nabiji,Step
+botli,Bottle
+sityva,Word
+satvale,Glasses
+barati,Card
+telefoni,Phone

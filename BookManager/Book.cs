@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace StepProjects.BookManager
 {
-    public class Book
+    public class Book // book class with fields, constructor and overriden toString method
     {
         public string Title { get; set; }
         public string Author { get; set; }

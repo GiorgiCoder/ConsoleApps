@@ -13,7 +13,7 @@ namespace StepProjects
         {
             Random random = new Random();
             string word = words[random.Next(0, words.Length)];
-            char[] wordInChars = word.ToCharArray();
+            char[] wordInChars = word.ToCharArray(); // to iterate each letter
             int triesLeft = 10;
             char[] usersWord = new char[wordInChars.Length]; // for printing out for user
             for (int i = 0; i < usersWord.Length; i++)
@@ -21,14 +21,14 @@ namespace StepProjects
                 usersWord[i] = '_';
             }
 
-            char[] tempWord = usersWord;
+            char[] tempWord = usersWord; // tempWord to hold the temporary word and check if letter was guessed
             Console.WriteLine(new string(usersWord));
 
             while (triesLeft > 0)
             {
                 Console.WriteLine("Enter a letter:");
                 char c = '0';
-                while (true)
+                while (true) // validation for char
                 {
                     try
                     {
@@ -62,17 +62,17 @@ namespace StepProjects
 
                 if (usersWord.SequenceEqual(wordInChars))
                 {
-                    Console.WriteLine($"Congratulations! You guessed the word '{word}'");
+                    Console.WriteLine($"Congratulations! You guessed the word '{word}'"); // win
                     return;
                 }
             }
             
         }
 
-        private char[] OpenLetters(char[] word, char[] userWord, char letter)
+        private char[] OpenLetters(char[] word, char[] userWord, char letter) // method for printing out the opened letters
         {
             char[] result = (char[])userWord.Clone();
-            if (!word.Contains(letter))
+            if (!word.Contains(letter)) // if doesn't contain letter, return
             {
                 return userWord;
             }
@@ -87,7 +87,7 @@ namespace StepProjects
                 }
             }
 
-            return result;
+            return result; // result is changed word with opened letters
         }
     }
 }

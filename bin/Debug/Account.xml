@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<ArrayOfAccount xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Account>
+    <Username>Giorgi</Username>
+    <Password>password123</Password>
+    <Balance>500</Balance>
+  </Account>
+  <Account>
+    <Username>John</Username>
+    <Password>password123</Password>
+    <Balance>0</Balance>
+  </Account>
+  <Account>
+    <Username>Luka</Username>
+    <Password>password123</Password>
+    <Balance>100000</Balance>
+  </Account>
+  <Account>
+    <Username>Jane</Username>
+    <Password>doe</Password>
+    <Balance>0</Balance>
+  </Account>
+</ArrayOfAccount>

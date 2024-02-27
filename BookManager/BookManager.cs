@@ -18,6 +18,7 @@ namespace StepProjects.BookManager
 
         public static bool AddBook(string title, string author, int year)
         {
+            // check if book already exists
             var bookExists = books.Any(b => b.Title == title && b.Author == author && b.ReleaseYear == year);
 
             if (bookExists) return false;
@@ -27,13 +28,13 @@ namespace StepProjects.BookManager
             return true;
         }
 
-        public static List<Book> GetAllBooks()
+        public static List<Book> GetAllBooks() // just return 'books' entity
         {
             return books;
         }
 
 
-        public static Book SearchBookByTitle(string title)
+        public static Book SearchBookByTitle(string title) // searching with linq
         {
             var book = books.FirstOrDefault(x => x.Title == title);
             return book;

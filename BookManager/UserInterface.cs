@@ -15,7 +15,7 @@ namespace StepProjects.BookManager
                 Console.WriteLine("Choose which service you want to use (enter number):\n1. List all books' details\n2. Get book details\n3. Add a book\n4. Exit");
 
                 int option = 0;
-                while (true)
+                while (true) // validation for option
                 {
                     try
                     {
@@ -32,25 +32,25 @@ namespace StepProjects.BookManager
                     }
                 }
 
-                if (option == 1)
+                if (option == 1) // return all books
                 {
                     ListAllBooks();
                 }
-                else if (option == 2)
+                else if (option == 2) // return 1 book
                 {
                     Console.WriteLine("Enter the name of the book you want to view:");
                     string bookTitle = Console.ReadLine();
                     GetBookDetails(bookTitle);
                 }
-                else if (option == 3)
+                else if (option == 3) // add book
                 {
                     AddBook();
                 }
-                else return;
+                else return; // option == 4, exit
             }
         }
 
-        private static void ListAllBooks()
+        private static void ListAllBooks() // just print out all books using our ToString() method
         {
             var books = BookManager.GetAllBooks();
             foreach (var book in books)
@@ -63,11 +63,11 @@ namespace StepProjects.BookManager
         private static void GetBookDetails(string title)
         {
             var book = BookManager.SearchBookByTitle(title);
-            if (book == null)
+            if (book == null) // if book doesn't exist, suggest to add it
             {
                 Console.WriteLine($"Book '{title}' wasn't found. Do you want to add it? Y / N");
                 string optionToAdd = "Y";
-                while (true)
+                while (true) // validation for option
                 {
                     optionToAdd = Console.ReadLine();
                     if (optionToAdd == "Y" || optionToAdd == "N")
@@ -80,13 +80,13 @@ namespace StepProjects.BookManager
                         continue;
                     }
                 }
-                if (optionToAdd == "Y")
+                if (optionToAdd == "Y") // add if Yes
                 {
                     AddBook();
                 }
-                else { return; }
+                else { return; } // else exit
             }
-            else
+            else // if exists, return it.
             {
                 Console.WriteLine(book.ToString());
             }
@@ -100,7 +100,7 @@ namespace StepProjects.BookManager
             string author = Console.ReadLine();
             Console.WriteLine("Enter release year:");
             int releaseYear;
-            while (true)
+            while (true) // validation for release year
             {
                 try
                 {
@@ -117,9 +117,9 @@ namespace StepProjects.BookManager
                 }
             }
 
-            var added = BookManager.AddBook(title, author, releaseYear);
-            if (added) { Console.WriteLine($"The book {title} was successfully added!"); }
-            else { Console.WriteLine("The book already exists!"); }
+            var added = BookManager.AddBook(title, author, releaseYear); // add book
+            if (added) { Console.WriteLine($"The book {title} was successfully added!"); } // check if it was added
+            else { Console.WriteLine("The book already exists!"); } // if false, it means book already existed
         }
     }
 }

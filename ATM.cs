@@ -4,31 +4,32 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace StepProjects
 {
     public class ATM
     {
+        private const string filePath = "Account.xml";
         public void Action()
         {
-            Account currentAccount = null;
-            Dictionary<string, int> UsernameAndBalance = new Dictionary<string, int>();
-            string filePath = "C:\\Users\\Giorgi\\source\\repos\\StepProjects\\StepProjects\\files\\bankinfo.txt";
-            using (StreamWriter writer = new StreamWriter(filePath, false))
+            List<Account> accounts;
+
+            if (File.Exists(filePath))
             {
-                writer.WriteLine("Name,Password");
-                foreach (var acc in Account.accounts)
-                {
-                    UsernameAndBalance.Add(acc.Username, acc.Balance);
-                    writer.WriteLine($"{acc.Username},{acc.Password}");
-                }
+                accounts = DeserializeAccounts();
+            }
+            else
+            {
+                accounts = Account.GetDefaultAccounts();
+                SerializeAccounts(accounts);
             }
 
-        TryAgain:
+            Account currentAccount = null;
             Console.WriteLine("Login (1) or Register (2)?");
             int option = 1;
 
-            while (true)
+            while (true) // validation for input
             {
                 try
                 {
@@ -45,16 +46,18 @@ namespace StepProjects
                 }
             }
 
-            if (option == 1)
+            if (option == 1) // login
             {
                 Console.WriteLine("Enter username");
                 string username = Console.ReadLine();
-                if (UsernameAndBalance.ContainsKey(username))
+                var acc = Account.GetAccountByUsername(accounts, username);
+
+                if (acc != null)
                 {
-                    var acc = Account.GetAccountByUsername(username);
                     Console.WriteLine("Enter password");
                     string password = Console.ReadLine();
-                    if (acc.Password == password)
+
+                    if (acc.CheckPassword(password))
                     {
                         Console.WriteLine("Login successful");
                         currentAccount = acc;
@@ -62,125 +65,146 @@ namespace StepProjects
                     else
                     {
                         Console.WriteLine("Password is incorrect");
-                        goto TryAgain;
+                        return;
                     }
                 }
                 else
                 {
                     Console.WriteLine("User doesn't exist");
-                    goto TryAgain;
+                    return;
                 }
             }
-            else
+            else // register
             {
                 Console.WriteLine("Enter your username");
                 string username = Console.ReadLine();
-                if (UsernameAndBalance.ContainsKey(username))
+
+                if (Account.UsernameExists(accounts, username))
                 {
                     Console.WriteLine("User already exists. Try again");
-                    goto TryAgain;
+                    return;
                 }
+
                 Console.WriteLine("Enter your password");
                 string password = Console.ReadLine();
                 var account = new Account(username, password, 0);
-                var success = Account.AddAccount(account);
-                if (success)
-                {
-                    Console.WriteLine("Register successfull");
-                    currentAccount = account;
-                }
-                else
-                {
-                    Console.WriteLine("Something went wrong");
-                    goto TryAgain;
-                }
+                accounts.Add(account);
+                SerializeAccounts(accounts);
+                Console.WriteLine("Register successful");
+                currentAccount = account;
             }
 
-            Services:
-            Console.WriteLine("What service do you want to use? (enter number)\n1. Check balance\n2. Withdraw money\n3. Deposit money\n4. Exit");
-            int optionOfService = 1;
-
-            while (true)
+            bool continueUsing = true;
+            while (continueUsing)
             {
-                try
-                {
-                    optionOfService = int.Parse(Console.ReadLine());
-                    if (optionOfService == 1 || optionOfService == 2 || optionOfService == 3 || optionOfService == 4)
-                    {
-                        break;
-                    }
-                    else int.Parse("GoToError");
-                }
-                catch (Exception) { }
-                {
-                    Console.WriteLine("Enter a valid option");
-                }
-            }
+                Console.WriteLine("What service do you want to use? (enter number)\n1. Check balance\n2. Withdraw money\n3. Deposit money\n4. Exit");
+                int optionOfService = 1;
 
-            if (optionOfService == 1)
-            {
-                Console.WriteLine($"{currentAccount.Username}, your current balance is: {currentAccount.Balance}$");
-                goto Services;
-            }
-            else if (optionOfService == 2 || optionOfService == 3)
-            {
-                if (optionOfService == 2) Console.WriteLine("Enter amount to withdraw");
-                else Console.WriteLine("Enter amount to deposit");
-
-                int amount = 0;
-                while (true)
+                while (true) // validation for service
                 {
                     try
                     {
-                        amount = int.Parse(Console.ReadLine());
-                        break;
+                        optionOfService = int.Parse(Console.ReadLine());
+                        if (optionOfService == 1 || optionOfService == 2 || optionOfService == 3 || optionOfService == 4)
+                        {
+                            break;
+                        }
+                        else int.Parse("GoToError");
                     }
-                    catch
+                    catch (Exception) { }
                     {
-                        Console.WriteLine("Enter valid amount");
+                        Console.WriteLine("Enter a valid option");
                     }
                 }
 
-                if (optionOfService == 2)
+                if (optionOfService == 1) // check balance
                 {
-                    var success = currentAccount.Withdraw(amount);
+                    Console.WriteLine($"{currentAccount.Username}, your current balance is: {currentAccount.Balance}$");
+                }
+                else if (optionOfService == 2 || optionOfService == 3) // deposit and withdraw are combined, because they are similar
+                {
+                    if (optionOfService == 2) Console.WriteLine("Enter amount to withdraw");
+                    else Console.WriteLine("Enter amount to deposit");
 
-                    if (success)
+                    int amount = 0;
+                    while (true) // amount validation
                     {
-                        Console.WriteLine($"{amount}$ was withdrawn successfully!");
+                        try
+                        {
+                            amount = int.Parse(Console.ReadLine());
+                            break;
+                        }
+                        catch
+                        {
+                            Console.WriteLine("Enter valid amount");
+                        }
+                    }
+
+                    if (optionOfService == 2) // withdraw
+                    {
+                        var success = currentAccount.Withdraw(amount);
+
+                        if (success)
+                        {
+                            Console.WriteLine($"{amount}$ was withdrawn successfully!");
+                            Console.WriteLine($"Your current balance is {currentAccount.Balance}$");
+                        }
+                        else Console.WriteLine("Insufficient funds");
+                    }
+                    else // deposit
+                    {
+                        currentAccount.Deposit(amount);
+                        Console.WriteLine($"{amount}$ was deposited successfully!");
                         Console.WriteLine($"Your current balance is {currentAccount.Balance}$");
                     }
-                    else Console.WriteLine("Insufficient funds");
+                    SerializeAccounts(accounts);
                 }
-                else
+                else // exit
                 {
-                    currentAccount.Deposit(amount);
-                    Console.WriteLine($"{amount}$ was deposited successfully!");
-                    Console.WriteLine($"Your current balance is {currentAccount.Balance}$");
+                    currentAccount = null; // no need but still
+                    return;
                 }
 
-                goto Services;
+                string input = "Y";
+                while (true)
+                {
+                    Console.WriteLine("Do you want to use our services again? Y / N");
+                    input = Console.ReadLine();
+                    if (input == "Y" || input == "N")
+                        break;
+                }
+
+                if (input == "N") continueUsing = false; // else, while loop terminates again
             }
-            else
+        }
+
+        private void SerializeAccounts(List<Account> accounts)
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(List<Account>));
+            using (FileStream fileStream = File.Create(filePath))
             {
-                currentAccount = null;
-                return;
+                serializer.Serialize(fileStream, accounts);
+            }
+        }
+
+        private List<Account> DeserializeAccounts()
+        {
+            XmlSerializer serializer = new XmlSerializer(typeof(List<Account>));
+            using (FileStream fileStream = File.OpenRead(filePath))
+            {
+                return (List<Account>)serializer.Deserialize(fileStream);
             }
         }
     }
 
+    [Serializable]
     public class Account
     {
-        public static List<Account> accounts = new List<Account>()
-        {
-            new Account("Giorgi", "password123", 1500),
-            new Account("John", "password123", 0),
-            new Account("Luka", "password123", 100000),
-        };
-
         public string Username { get; set; }
         public string Password { get; set; }
         public int Balance { get; set; }
+
+        public Account() { }
 
         public Account(string username, string password, int balance)
         {
@@ -191,35 +215,43 @@ namespace StepProjects
 
         public bool Withdraw(int amount)
         {
-            if (this.Balance < amount) { return false; }
-
-            this.Balance -= amount;
-            return true;
+            if (Balance >= amount)
+            {
+                Balance -= amount;
+                return true;
+            }
+            return false;
         }
 
-        public bool Deposit(int amount)
+        public void Deposit(int amount)
         {
-            this.Balance += amount;
-            return true;
+            Balance += amount;
         }
 
         public bool CheckPassword(string password)
         {
-            if (this.Password == password) { return true; }
-            return false;
+            return Password == password;
         }
 
-        public static Account GetAccountByUsername(string username)
+        public static Account GetAccountByUsername(List<Account> accounts, string username)
         {
-            return accounts.FirstOrDefault(x => x.Username == username);
+            return accounts.FirstOrDefault(a => a.Username == username);
         }
 
-        public static bool AddAccount(Account account)
+        public static bool UsernameExists(List<Account> accounts, string username)
         {
-            var acc = accounts.FirstOrDefault(a => a.Username == account.Username);
-            if (acc != null) { return false; }
-            accounts.Add(account);
-            return true;
+            return accounts.Any(a => a.Username == username);
+        }
+
+        public static List<Account> GetDefaultAccounts()
+        {
+            return new List<Account>
+            {
+                new Account("Giorgi", "password123", 1500),
+                new Account("John", "password123", 0),
+                new Account("Luka", "password123", 100000),
+                new Account("Jane", "doe", 0)
+            };
         }
     }
 }

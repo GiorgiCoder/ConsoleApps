@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace StepProjects.StudentManager
 {
-    public class Student
+    public class Student // student class with fields, constructor and toString
     {
         public string Name { get; set; }
         public int RollNumber { get; set; }

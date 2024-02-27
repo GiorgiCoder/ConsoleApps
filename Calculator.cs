@@ -13,7 +13,7 @@ namespace StepProjects
             double m = 0, n = 0;
             double result = 0;
 
-            while (true)
+            while (true) // validation for number 1
             {
                 Console.WriteLine("Enter first number: ");
                 try
@@ -27,17 +27,17 @@ namespace StepProjects
                     continue;
                 }
             }
-            while (true)
+            while (true) // validation for number 2
             {
                 Console.WriteLine("Enter second number: ");
                 try
                 {
-                    Console.WriteLine("Enter a valid second number");
                     n = double.Parse(Console.ReadLine());
                     break;
                 }
                 catch (FormatException)
                 {
+                    Console.WriteLine("Enter a second number");
                     continue;
                 }
             }
@@ -45,7 +45,7 @@ namespace StepProjects
             char[] availableOperations = { '+', '-', '*', '/' };
             char operation = '0';
 
-            while (true)
+            while (true) // validation for operation
             {
                 Console.WriteLine("Enter operation: ");
                 try
@@ -64,7 +64,7 @@ namespace StepProjects
                 }
             }
 
-            switch (operation)
+            switch (operation) // operation itself
             {
                 case '+':
                     result = m + n;
@@ -76,7 +76,14 @@ namespace StepProjects
                     result = m * n;
                     break;
                 case '/':
-                    result = m / n;
+                    try
+                    {
+                        result = m / n;
+                    }
+                    catch
+                    {
+                        Console.WriteLine("Dividing by 0 isn't possible");
+                    }
                     break;
                 default:
                     result = -1;

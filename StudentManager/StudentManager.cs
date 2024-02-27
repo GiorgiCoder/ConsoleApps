@@ -14,6 +14,7 @@ namespace StepProjects.StudentManager
             new Student("Giorgi", 0, 'A'),
             new Student("John Doe", 1, 'A'),
             new Student("Markus", 2, 'C'),
+            new Student("Helmut", 3, 'F')
         };
 
         public void Action()
@@ -23,7 +24,7 @@ namespace StepProjects.StudentManager
                 Console.WriteLine("Choose which service you want to use (enter number):\n1. Add student\n2. Show all students\n3. Search student by Id\n4. Update student's grade\n5. Exit");
 
                 int option = 0;
-                while (true)
+                while (true) // validation for user input
                 {
                     try
                     {
@@ -40,19 +41,19 @@ namespace StepProjects.StudentManager
                     }
                 }
 
-                if (option == 1)
+                if (option == 1) // add student
                 {
                     AddStudent();
                 }
-                else if (option == 2)
+                else if (option == 2) // return all students
                 {
                     GetAllStudents();
                 }
-                else if (option == 3)
+                else if (option == 3) // search student by Id
                 {
                     Console.WriteLine("Enter ID:");
                     int Id = -1;
-                    while (true)
+                    while (true) // validation for Id
                     {
                         try
                         {
@@ -66,7 +67,7 @@ namespace StepProjects.StudentManager
                     }
                     Console.WriteLine(GetStudentById(Id).ToString());
                 }
-                else if (option == 4)
+                else if (option == 4) // update grade
                 {
                     UpdateStudentGrade();
                 }
@@ -80,16 +81,16 @@ namespace StepProjects.StudentManager
             string name = Console.ReadLine();
 
             var stdnt = students.FirstOrDefault(s => s.Name == name); // bad checking but we don't have more info about students
-            if (stdnt != null)
+            if (stdnt != null) // if student != null, it means he already exists
             {
                 Console.WriteLine("Student already exists!");
                 return false;
             }
-
-            int rollNumber = students.Last().RollNumber + 1;
+            //else
+            int rollNumber = students.Last().RollNumber + 1; // autoincrement Id
             Console.WriteLine("Enter student's grade:");
             char grade = 'A';
-            while (true)
+            while (true) // validation for grade
             {
                 try
                 {
@@ -101,14 +102,14 @@ namespace StepProjects.StudentManager
                     Console.WriteLine("Enter a valid character for grade");
                 }
             }
-
+            // after validation, add student
             var student = new Student(name, rollNumber, grade);
             students.Add(student);
             Console.WriteLine($"{name} has been added successfully!");
             return true;
         }
 
-        private void GetAllStudents()
+        private void GetAllStudents() // print out each student
         {
             students.ForEach(student =>
             {
@@ -116,7 +117,7 @@ namespace StepProjects.StudentManager
             });
         }
 
-        private Student GetStudentById(int rollNumber)
+        private Student GetStudentById(int rollNumber) // get by id with linq
         {
             var student = students.FirstOrDefault(s => s.RollNumber == rollNumber);
             return student;
@@ -126,18 +127,18 @@ namespace StepProjects.StudentManager
         {
             string name = "";
             Student student = null;
-            while (true)
+            while (true) // validation for name
             {
                 Console.WriteLine("Enter student's name:");
                 name = Console.ReadLine();
                 student = students.FirstOrDefault(s => s.Name == name);
-                if (student != null) { break; }
+                if (student != null) { break; } // if student exists, exit
                 else Console.WriteLine("Student was not found. Try again");
             }
 
             Console.WriteLine("Enter grade");
             char grade = 'A';
-            while (true)
+            while (true) // validation for grade
             {
                 try
                 {
